@@ -18,6 +18,8 @@ dbConnection();
 
 //rutas
 app.use('/api/auth', require('./routes/auth'))
+
+app.use('/api/user', require('./routes/user'))
 app.listen(process.env.PORT, () => {
   console.log("esta  running el hijo de su puta madre en " + process.env.PORT);
 });

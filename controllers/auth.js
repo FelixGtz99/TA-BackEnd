@@ -13,6 +13,13 @@ const login = async (req, res = response) => {
     }
 
     const validPass = bcrypt.compareSync(pass, userDB.pass);
+
+    if (!validPass) {
+      res.status(404).json({
+        ok: false,
+        msg: "Datos no validos",
+      });
+    }
     const token = await generateJWT(userDB.id);
     res.json({
       token,

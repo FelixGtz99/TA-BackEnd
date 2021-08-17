@@ -30,7 +30,7 @@ const UserSchema =Schema({
     },
     showInfo:{
         default:false,
-        type:true
+        type:Boolean
     },
     userType:{
         require:true,

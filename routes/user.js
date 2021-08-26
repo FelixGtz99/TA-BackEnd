@@ -1,7 +1,8 @@
 const {Router}=require('express')
 const router = Router()
 const {check} =require('express-validator')
-const { postUser } = require('../controllers/users')
+const { postUser, getUser, updateBanStatus } = require('../controllers/users')
+const { checkToken } = require('../middlewares/check-token')
 const { validateData } = require('../middlewares/validate-data')
 
 router.post('/', 
@@ -16,4 +17,13 @@ router.post('/',
 
     validateData],
  postUser)
+
+ router.get('/:id',checkToken, getUser)
+
+ router.put('/banstatus/:id',[
+    checkToken,
+    check('finishBan', 'Es necesarioa la fecha de finalización').not().isEmpty(),
+    check('isBanned','Es necesario designar status').isBoolean(),
+    validateData
+], updateBanStatus)
 module.exports=router

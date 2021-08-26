@@ -10,7 +10,7 @@ const CourseSchema = {
     type: Number,
     require: true,
   },
-  user: {
+  teacher: {
     type: Schema.Types.ObjectId,
     ref: "User",
     require: true,
@@ -22,10 +22,11 @@ const CourseSchema = {
     require: true,
   },
   tags: {
+    require:true,
     type: Array,
   },
   isBanned: {
-    require: true,
+    //require: true,
     type: Boolean,
     default: false,
   },

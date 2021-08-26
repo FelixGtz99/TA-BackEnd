@@ -43,6 +43,13 @@ const UserSchema =Schema({
     google:{
         type:Boolean,
         default:false
+    },
+    isBanned:{
+        type:Boolean,
+        default:false
+    },
+    finishBan:{
+        type:Date
     }
 
 

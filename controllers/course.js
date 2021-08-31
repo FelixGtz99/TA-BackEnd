@@ -1,5 +1,5 @@
-const { response, json } = require("express");
-const course = require("../models/course");
+const { response } = require("express");
+
 const Course = require("../models/course");
 
 const getCourses = async (req, res = response) => {
@@ -25,7 +25,7 @@ const postCourse = async (req, res = response) => {
   console.log(req.body);
   const { category, teacher } = req.body;
   try {
-    const existsCourse = await Course.find({ category, teacher });
+    const existsCourse = await Course.findOne({ category, teacher });
 
     if (existsCourse) {
       return res.json({

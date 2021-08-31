@@ -2,20 +2,21 @@ const {Schema, model}=require('mongoose')
 //TODO: Darle tipado a las propiedades
 const AdvisorySchema= Schema({
     days:{
+        type:Array,
         require:true,
     },
     course:{ 
         type:Schema.Types.ObjectId,
         ref:"Course",
-        requiered:true
+        require:true
     },
-    monday:{},
-    tuesday:{},
-    wednesday:{},
-    thursday:{},
-    friday:{},
-    saturday:{},
-    sunday:{}
+    student:{
+        type:Schema.Types.ObjectId,
+        ref:"User",
+        require:true
+    }
+
+  
 })
 
 module.exports=model("Advisory", AdvisorySchema)

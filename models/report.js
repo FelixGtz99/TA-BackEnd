@@ -3,7 +3,7 @@ const { Schema, model } = require("mongoose");
 const ReportSchema = Schema({
     date:{
         type:Date,
-        require:true,
+      //  require:true,
         default:new Date().getDate(),
     },
     student:{

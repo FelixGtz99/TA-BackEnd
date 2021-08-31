@@ -15,15 +15,18 @@ dbConnection();
 
 //Directorio Publico
 
-
 //rutas
-app.use('/api/auth', require('./routes/auth'))
+app.use("/api/auth", require("./routes/auth"));
 
-app.use('/api/user', require('./routes/user'))
+app.use("/api/user", require("./routes/user"));
 
-app.use('/api/category', require('./routes/category'))
+app.use("/api/category", require("./routes/category"));
 
-app.use('/api/course', require('./routes/course'))
+app.use("/api/course", require("./routes/course"));
+
+app.use("/api/advisory", require("./routes/advisory"))
+
+app.use("/api/report", require("./routes/report"))
 
 app.listen(process.env.PORT, () => {
   console.log("esta  running el hijo de su puta madre en " + process.env.PORT);

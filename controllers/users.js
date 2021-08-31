@@ -29,43 +29,57 @@ const postUser = async (req, res = response) => {
 };
 
 const getUser = async (req, res = response) => {
- const id = req.params.id 
- const user= User.findById(id)
+  const id = req.params.id;
+  const user = User.findById(id);
   res.json({
-    user
-  })
+    user,
+  });
 };
 
 const putUser = async (req, res = response) => {};
 
 const deleteUser = async (req, res = response) => {};
 
-const updateBanStatus = async (req, res=response)=>{
-  const id = req.params.id 
-  const data=req.body
+const updateBanStatus = async (req, res = response) => {
+  const id = req.params.id;
+  const data = req.body;
   try {
-    const existsUser= await User.findById(id)
-    if(!existsUser){
+    const existsUser = await User.findById(id);
+    if (!existsUser) {
       return res.status(505).json({
-        msg:'no existe el curso'
-      })
+        msg: "no existe el curso",
+      });
     }
-    const updatedUser= await User.findByIdAndUpdate(id,data,{new:true})
+    const updatedUser = await User.findByIdAndUpdate(id, data, { new: true });
     res.json({
-      updatedUser
-    })
+      updatedUser,
+    });
   } catch (error) {
     res.status(404).json({
-      error
-    })
+      error,
+    });
   }
+};
 
-}
+const getUsersBanned = async (req, res = response) => {
+  const users = await User.find({ isBanned: true });
 
-module.exports={
-    postUser,
-    getUser,
-    putUser,
-    deleteUser,
-    updateBanStatus
-}
+  res.json({
+    users,
+  });
+};
+const getTeachers = async (req, res = response) => {
+  const teacher = await User.find({userRole:'TEACHER'})
+  res.json({
+    teacher
+  })
+};
+module.exports = {
+  postUser,
+  getUser,
+  putUser,
+  deleteUser,
+  updateBanStatus,
+  getUsersBanned,
+  getTeachers
+};

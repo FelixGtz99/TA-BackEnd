@@ -24,7 +24,7 @@ app.use("/api/category", require("./routes/category"));
 
 app.use("/api/course", require("./routes/course"));
 
-app.use("/api/advisory", require("./routes/advisory"))
+app.use("/api/advisory", require("./routes/advisory"));
 
 app.use("/api/report", require("./routes/report"))
 

@@ -28,6 +28,8 @@ app.use("/api/advisory", require("./routes/advisory"));
 
 app.use("/api/report", require("./routes/report"))
 
+app.use("/api/uploads", require("./routes/upload"))
+
 app.listen(process.env.PORT, () => {
   console.log("esta  running el hijo de su puta madre en " + process.env.PORT);
 });

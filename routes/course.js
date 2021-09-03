@@ -5,6 +5,7 @@ const {
   putCourse,
   deleteCourse,
   getCoursesById,
+  getCoursesByCategory,
 } = require("../controllers/course");
 
 const {check} = require('express-validator')
@@ -29,6 +30,8 @@ validateData
 ],postCourse);
 
 router.put("/:id", putCourse);
+
+router.get('/category/:id',checkToken, getCoursesByCategory)
 
 router.delete("/", deleteCourse);
 

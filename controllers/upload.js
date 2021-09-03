@@ -42,6 +42,7 @@ const filesUpload = (req, res) => {
  
   res.json({
       msg:'imagen guardada correctamente',
+      dir:path.join(__dirname, pathImg)
   })
 };
 

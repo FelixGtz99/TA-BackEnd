@@ -8,6 +8,13 @@ const getCourses = async (req, res = response) => {
     courses
   })
 };
+const getCoursesByCategory= async(req, res=response)=>{
+  const category = req.params.id
+  const courses = await Course.find({category})
+
+  res.json({courses})
+
+}
 //Retorna los cursos de un instructor
 const getCoursesById = async (req, res=response)=>{
   const id = req.params.id
@@ -82,4 +89,5 @@ module.exports = {
   postCourse,
   putCourse,
   deleteCourse,
+  getCoursesByCategory
 };

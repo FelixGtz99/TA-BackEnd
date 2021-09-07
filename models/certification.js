@@ -3,6 +3,7 @@ const {Schema, model}=require('mongoose')
 const CertificationSchema=Schema({
     description:{
         type:String,
+        require:true
     },
     category:{
         type:Schema.Types.ObjectId,
@@ -20,11 +21,11 @@ const CertificationSchema=Schema({
     },
     status:{
         type:String,
-        require:true
+        default:'pending'
     },
     feedback:{
         type:String,
-        require:true
+        
     },
     
 

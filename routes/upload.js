@@ -1,11 +1,12 @@
 const { Router } = require("express");
 const router = Router();
 const expressFileUpload = require("express-fileupload");
-const { filesUpload } = require("../controllers/upload");
+const { filesUpload, returnFile } = require("../controllers/upload");
 const { checkToken } = require("../middlewares/check-token");
 
 router.use(expressFileUpload());
 
-router.post('/:dataType',checkToken, filesUpload )
+router.put('/:dataType',checkToken, filesUpload )
 
+router.get('/:dataType/:ref',returnFile)
 module.exports = router;

@@ -2,6 +2,7 @@ const { Router } = require("express");
 const router = Router();
 const { check } = require("express-validator");
 const { renewToken, login } = require("../controllers/auth");
+const { checkToken } = require("../middlewares/check-token");
 const { validateData } = require("../middlewares/validate-data");
 
 router.post('/',[
@@ -9,6 +10,9 @@ router.post('/',[
     check('pass','el pass es obligatorio').not().isEmpty(),
     validateData
 ],login)
-
-router.get('/renew', validateData,renewToken)
+router.post('/google',[
+    check('token', 'El token de google es obligatorio').not().isEmpty(),
+    validateData
+])
+router.get('/renew', checkToken,renewToken)
 module.exports= router

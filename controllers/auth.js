@@ -29,16 +29,19 @@ const login = async (req, res = response) => {
 };
 const renewToken = async (req, res = response) => {
     const uid = req.uid;
+    console.log('ddd');
+    console.log(uid);
     // Generar el TOKEN - JWT
-    const token = await generarJWT(uid);
+    const token = await generateJWT(uid);
     try {
-      const user=await User.findById(id)
+      const user=await User.findById(uid)
       res.json({
         ok: true,
         token,
         user
       });
     } catch (error) {
+      console.log(error);
       res.status(404).json({
         ok: true,
        msg:'no existe usuario'
@@ -63,8 +66,8 @@ const googleSignIn=async (req,res=response)=>{
         google:true
       })
     }
-    await user.save()
-    const token=await generateJWT(user.id)
+    await userDB.save()
+    const token=await generateJWT(userDB.id)
 
     res.json({
       ok:true,

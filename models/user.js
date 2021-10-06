@@ -13,7 +13,6 @@ const UserSchema =Schema({
     },
     birthday:{
         type:Date,
-        required:true
     },
     img:{
         type:String,

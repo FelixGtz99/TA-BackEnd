@@ -33,7 +33,7 @@ app.use("/api/evaluation", require("./routes/evaluation"))
 app.use("/api/certification", require("./routes/certification"))
 
 //Esto es por si habilito la subida de archivos en el servidor
-// app.use("/api/uploads", require("./routes/upload"))
+app.use("/api/uploads", require("./routes/upload"))
 
 app.listen(process.env.PORT, () => {
   console.log("esta  running el hijo de su puta madre en " + process.env.PORT);

@@ -36,7 +36,56 @@ const getUser = async (req, res = response) => {
   });
 };
 
-const putUser = async (req, res = response) => {};
+const putUser = async (req, res = response) => {
+  const uid = req.params.id;
+  try {
+    const userDB = await User.findById(uid);
+    if (!userDB) {
+      return res.status(404).json({
+        ok: false,
+        msg: "No existe ese usuario",
+      });
+    }
+    //Actualizar
+    const { pass, google, email, ...campos } = req.body;
+    //esto es de un error que no me salio a mi, lo pongo por si las moscass
+    if (userDB.email != email) {
+      const existeEmail = await User.findOne({
+        email,
+      });
+      if (existeEmail) {
+        return res.status(404).json({
+          ok: false,
+          msg: "Correo Ya registrado",
+        });
+      }
+    }
+   if(!userDB.google) {
+    campos.email = email;
+   }else if (userDB.email !==email){
+    return res.status(400).json({
+      ok:false,
+      msg:'usuarios de google no puede cambiar su correo'
+    })
+   }
+  
+    const updatedUser = await User.findByIdAndUpdate(uid, campos, {
+      new: true,
+    });
+
+    res.json({
+      ok: true,
+      updatedUser
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      ok: false,
+      msg: "la cagaste carnal",
+    });
+  }
+
+};
 
 const deleteUser = async (req, res = response) => {};
 
@@ -47,7 +96,7 @@ const updateBanStatus = async (req, res = response) => {
     const existsUser = await User.findById(id);
     if (!existsUser) {
       return res.status(505).json({
-        msg: "no existe el curso",
+        msg: "no existe el usuario",
       });
     }
     const updatedUser = await User.findByIdAndUpdate(id, data, { new: true });

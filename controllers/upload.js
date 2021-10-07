@@ -1,10 +1,10 @@
 const { v4: uuidv4 } = require("uuid");
 const path = require("path");
-const{ updateImg }=require('../helpers/updateImg')
+const fs = require("fs");
+const { updateImg } = require("../helpers/updateImg");
 //Area a utilizar por si me interesa subir al servidor, Pero por ahora planeo subir aun servidor externo
 
 const filesUpload = (req, res) => {
-
   const type = req.params.dataType;
   const id = req.params.id;
   const validDataTypes = ["users", "certification", "evidence"];
@@ -12,9 +12,9 @@ const filesUpload = (req, res) => {
     return res.json({
       ok: false,
       msg: "El tipo no es valido",
-    });}
+    });
+  }
   if (!req.files || Object.keys(req.files).length === 0) {
- 
     return res.status(400).json({
       msg: "No hay archivo",
     });
@@ -34,26 +34,24 @@ const filesUpload = (req, res) => {
   const name = `${uuidv4()}.${fileType}`;
   const pathImg = `./uploads/${type}/${name}`;
 
-  file.mv(pathImg, (err) => { 
+  file.mv(pathImg, (err) => {
     if (err) {
-    
       console.log(err);
       return res.status(500).json({
         msg: "Hubo un error en el guardado de imagen",
       });
     }
   });
- 
-  updateImg(dataType,id, name)
+
+  updateImg(fileType, id, name);
   res.json({
-    ok:true,
-      msg:'imagen guardada correctamente',
-       name 
-  })
+    ok: true,
+    msg: "imagen guardada correctamente",
+    name,
+  });
 };
 
-const returnFile=(req,res)=>{
-  
+const returnFile = (req, res) => {
   const type = req.params.dataType;
   const ref = req.params.ref;
   const pathImg = path.join(__dirname, `../uploads/${type}/${ref}`);
@@ -63,9 +61,9 @@ const returnFile=(req,res)=>{
     const pathImg = path.join(__dirname, `../uploads/no-img.jpg`);
     res.sendFile(pathImg);
   }
-}
+};
 
 module.exports = {
   filesUpload,
-  returnFile
+  returnFile,
 };

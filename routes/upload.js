@@ -6,7 +6,7 @@ const { checkToken } = require("../middlewares/check-token");
 
 router.use(expressFileUpload());
 
-router.put('/:dataType',checkToken, filesUpload )
+router.put('/:dataType/:ref',checkToken, filesUpload )
 
 router.get('/:dataType/:ref',returnFile)
 module.exports = router;

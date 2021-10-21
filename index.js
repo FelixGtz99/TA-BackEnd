@@ -32,6 +32,8 @@ app.use("/api/evaluation", require("./routes/evaluation"))
 
 app.use("/api/certification", require("./routes/certification"))
 
+app.use("/api/level", require("./routes/level"))
+
 //Esto es por si habilito la subida de archivos en el servidor
 app.use("/api/uploads", require("./routes/upload"))
 

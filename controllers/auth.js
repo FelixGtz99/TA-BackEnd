@@ -63,7 +63,8 @@ const googleSignIn=async (req,res=response)=>{
         email,
         pass:"@@@",
         img:picture,
-        google:true
+        google:true,
+       // userType:'NOTYPE'
       })
     }
     await userDB.save()

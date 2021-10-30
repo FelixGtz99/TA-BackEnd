@@ -20,7 +20,7 @@ router.get("/teacher/:id", checkToken, getCoursesById)
 router.post("/", [
   checkToken,
 check('category', 'El campo categoria es invalido').isMongoId(),
-check('category', 'El campo categoria es invalido').isMongoId(),
+
 
 check('price', 'El campo tarifa debe ser numero').isNumeric(),
 check('teacher', 'El campo instructor es invalido').isMongoId(),

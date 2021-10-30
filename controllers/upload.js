@@ -6,7 +6,8 @@ const { updateImg } = require("../helpers/updateImg");
 
 const filesUpload = (req, res) => {
   const type = req.params.dataType;
-  const id = req.params.id;
+  const id = req.params.ref;
+  const {path}=req.body
   const validDataTypes = ["users", "certification", "evidence"];
   if (!validDataTypes.includes(type)) {
     return res.json({
@@ -14,40 +15,40 @@ const filesUpload = (req, res) => {
       msg: "El tipo no es valido",
     });
   }
-  if (!req.files || Object.keys(req.files).length === 0) {
-    return res.status(400).json({
-      msg: "No hay archivo",
-    });
-  }
+  // if (!req.files || Object.keys(req.files).length === 0) {
+  //   return res.status(400).json({
+  //     msg: "No hay archivo",
+  //   });
+  // }
 
-  const file = req.files.data;
-  const fileName = file.name.split(".");
-  const fileType = fileName[fileName.length - 1];
-  const validFileType = ["png", "jpg", "jpeg", "gif", "pdf"];
+  // const file = req.files.data;
+  // const fileName = file.name.split(".");
+  // const fileType = fileName[fileName.length - 1];
+  // const validFileType = ["png", "jpg", "jpeg", "gif", "pdf"];
 
-  if (!validFileType.includes(fileType)) {
-    return res.json({
-      msg: "tipo de formato no valido",
-    });
-  }
+  // if (!validFileType.includes(fileType)) {
+  //   return res.json({
+  //     msg: "tipo de formato no valido",
+  //   });
+  // }
 
-  const name = `${uuidv4()}.${fileType}`;
-  const pathImg = `./uploads/${type}/${name}`;
+  // const name = `${uuidv4()}.${fileType}`;
+  // const pathImg = `./uploads/${type}/${name}`;
 
-  file.mv(pathImg, (err) => {
-    if (err) {
-      console.log(err);
-      return res.status(500).json({
-        msg: "Hubo un error en el guardado de imagen",
-      });
-    }
-  });
-
-  updateImg(fileType, id, name);
+  // file.mv(pathImg, (err) => {
+  //   if (err) {
+  //     console.log(err);
+  //     return res.status(500).json({
+  //       msg: "Hubo un error en el guardado de imagen",
+  //     });
+  //   }
+  // });
+console.log(path);
+  updateImg(type, id, path);
   res.json({
     ok: true,
     msg: "imagen guardada correctamente",
-    name,
+    path,
   });
 };
 

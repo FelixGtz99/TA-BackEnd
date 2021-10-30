@@ -9,31 +9,33 @@ const deleteImg = (path)=>{
     }
 }
 
-const updateImg = async (dataType, id,name)=>{
+const updateImg = async (dataType, id,path)=>{
 let oldPath = ''
 switch(dataType){
-    case 'user':
+    case 'users':
+        console.log(id);
         const user=await User.findById(id)
         if(!user) return false;
-        oldPath= `./uploads/users/${user.img}`
-        deleteImg(oldPath)
-        user.img=name
+        //oldPath= `./uploads/users/${user.img}`
+        //deleteImg(oldPath)
+        user.img=path
+        console.log(user);
         await user.save()
         return true
     case 'certification':
         const certification=await Certification.findById(id)
         if(!certification) return false;
-        oldPath= `./uploads/certifications/${certification.docref}`
-        deleteImg(oldPath)
-        certification.docref=name
+       // oldPath= `./uploads/certifications/${certification.docref}`
+        //deleteImg(oldPath)
+        certification.docref=path
         await certification.save()
         return true     
     case 'evidence':
             const course=await Course.findById(id)
             if(!course) return false;
-            oldPath= `./uploads/evidences/${course.evidence}`
-            deleteImg(oldPath)
-            course.evidence=name
+          //  oldPath= `./uploads/evidences/${course.evidence}`
+            //deleteImg(oldPath)
+            course.evidence=path
             await course.save()
             return true              
     }

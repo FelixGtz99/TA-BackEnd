@@ -19,7 +19,7 @@ const getCoursesByCategory= async(req, res=response)=>{
 const getCoursesById = async (req, res=response)=>{
   const id = req.params.id
   
-  const courses = await Course.find({teacher:id}).populate("category","name")
+  const courses = await Course.find({teacher:id}).populate("category","name").populate("level","name").populate("teacher","name")
 
   res.json({
     courses
@@ -30,23 +30,28 @@ const getCoursesById = async (req, res=response)=>{
 const postCourse = async (req, res = response) => {
   const course = new Course(req.body);
   console.log(req.body);
-  const { category, teacher } = req.body;
+  const { category, teacher,level } = req.body;
   try {
-    const existsCourse = await Course.findOne({ category, teacher });
-
+    const existsCourse = await Course.findOne({ category, teacher, level });
+    console.log('se esta creato')
     if (existsCourse) {
       return res.json({
+        ok:false,
         msg: "El instructor ya cuenta con un curso en esa catagoria",
       });
     }
 
     await course.save();
     res.json({
+      ok:true,
+      msg:'El curso fue guardado con exito',
       course,
     });
   } catch (error) {
     res.json({
-      error,
+      ok:false,
+      
+      msg:error,
     });
   }
 };

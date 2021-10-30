@@ -18,7 +18,7 @@ const CourseSchema = {
   evaluations: {},
   level: {
     type: Schema.Types.ObjectId,
-    ref: "level",
+    ref: "Level",
     require: true,
   },
   tags: {

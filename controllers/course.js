@@ -29,6 +29,7 @@ const getCoursesById = async (req, res=response)=>{
 
 const postCourse = async (req, res = response) => {
   const course = new Course(req.body);
+ 
   console.log(req.body);
   const { category, teacher,level } = req.body;
   try {

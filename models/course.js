@@ -30,8 +30,8 @@ const CourseSchema = {
     type: Boolean,
     default: false,
   },
-  evidence: {
-    type: Array,
+  imgsRef: {
+
   },
   github: {
     type: String,

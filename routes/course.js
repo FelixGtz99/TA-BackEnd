@@ -26,6 +26,7 @@ check('price', 'El campo tarifa debe ser numero').isNumeric(),
 check('teacher', 'El campo instructor es invalido').isMongoId(),
 check('tags', 'Debe de existir por lo menos una etiqueta').not().isEmpty(),
 check('level', 'El campo nivel es invaliod').isMongoId(),
+//check('imgsRef', 'El campo de imagenes es invalido').not().isEmpty(),
 validateData
 ],postCourse);
 

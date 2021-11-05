@@ -35,7 +35,7 @@ switch(dataType){
             if(!course) return false;
           //  oldPath= `./uploads/evidences/${course.evidence}`
             //deleteImg(oldPath)
-            course.evidence=path
+            course.imgsRef=path
             await course.save()
             return true              
     }

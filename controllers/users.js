@@ -118,9 +118,9 @@ const getUsersBanned = async (req, res = response) => {
   });
 };
 const getTeachers = async (req, res = response) => {
-  const teacher = await User.find({userRole:'TEACHER'})
+  const teachers = await User.find({userType:'TEACHER'})
   res.json({
-    teacher
+    teachers
   })
 };
 module.exports = {

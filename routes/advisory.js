@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const router = Router();
 const { check } = require("express-validator");
-const { postAdvisory, getAdvisoryById } = require("../controllers/advisory");
+const { postAdvisory, getAdvisoryById, getAdvisoryByStudent } = require("../controllers/advisory");
 const { validateData } = require("../middlewares/validate-data");
 const { checkToken } = require("../middlewares/check-token");
 router.post("/",[
@@ -13,4 +13,5 @@ router.post("/",[
     
 ], postAdvisory)
 router.get("/",checkToken,getAdvisoryById)
+router.get("/student",getAdvisoryByStudent)
 module.exports = router;

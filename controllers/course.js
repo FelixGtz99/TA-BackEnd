@@ -19,7 +19,7 @@ const getCoursesByCategory= async(req, res=response)=>{
 const getCoursesById = async (req, res=response)=>{
   const id = req.params.id
   
-  const courses = await Course.find({teacher:id}).populate("category","name").populate("level","name").populate("teacher","name")
+  const courses = await Course.find({teacher:id}).populate("category","name").populate("level","name").populate("user","name img")
 
   res.json({
     courses

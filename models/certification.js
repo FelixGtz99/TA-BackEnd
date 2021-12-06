@@ -19,6 +19,7 @@ const CertificationSchema=Schema({
         ref:'User',
         require:true
     },
+    //Approved, rejected, pending
     status:{
         type:String,
         default:'pending'

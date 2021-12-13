@@ -8,6 +8,7 @@ const {
   getUsersBanned,
   getTeachers,
   putUser,
+  updateUserType,
 } = require("../controllers/users");
 const { checkToken } = require("../middlewares/check-token");
 const { validateData } = require("../middlewares/validate-data");
@@ -41,6 +42,7 @@ router.put(
   updateBanStatus
 );
 router.put('/:id',checkToken, putUser)
+router.put('/type/:id', updateUserType)
 router.get("/banned", checkToken, getUsersBanned);
 router.get("/teachers", checkToken, getTeachers);
 module.exports = router;

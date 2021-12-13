@@ -53,11 +53,13 @@ const renewToken = async (req, res = response) => {
 
 const googleSignIn=async (req,res=response)=>{
   const googleToken=req.body.token
+   var isValid=true
   try {
     const {name,email,picture}=await googleVerify(googleToken)
     const userDB=await User.findOne({email})
     let user;
     if(!userDB){
+      isValid=false
       user=new User({
         name:name,
         email,
@@ -66,12 +68,19 @@ const googleSignIn=async (req,res=response)=>{
         google:true,
        // userType:'NOTYPE'
       })
+    
+    } else {
+      // existe usuario
+      user = userDB;
+      user.google = true;
     }
-    await userDB.save()
-    const token=await generateJWT(userDB.id)
+    await user.save()
+    const token=await generateJWT(user.id)
 
     res.json({
       ok:true,
+      isValid,
+      id:user.id,
       token
     })
 

@@ -31,9 +31,32 @@ const postUser = async (req, res = response) => {
 const getUser = async (req, res = response) => {
   const id = req.params.id;
   const user = User.findById(id);
-  res.json({
-    user,
-  });
+  if(user){
+    res.json({
+      user,
+    });
+  }else{
+    res.json({
+      ok:false,
+      msg:'No user'
+    })
+  }
+  
+};
+const getUserByEmail = async (req, res = response) => {
+  const { email } =req.body
+  const user = User.find({email});
+  if(user){
+    res.json({
+      user,
+    });
+  }else{
+    res.json({
+      ok:false,
+      msg:'No user'
+    })
+  }
+  
 };
 
 const putUser = async (req, res = response) => {
@@ -87,6 +110,26 @@ const putUser = async (req, res = response) => {
 
 };
 
+const updateUserType=async(req,res)=>{
+    const id = req.params.id
+   const data=req.body
+   try {
+    const updatedUser = await User.findByIdAndUpdate(id, data,{new:true})
+    res.json({
+      ok: true,
+      updatedUser
+    });
+   } catch (error) {
+     console.log(error)
+     res.status(500).json({
+      ok: false,
+      msg: "la cagaste carnal",
+    });
+   }
+ 
+}
+
+
 const deleteUser = async (req, res = response) => {};
 
 const updateBanStatus = async (req, res = response) => {
@@ -130,5 +173,6 @@ module.exports = {
   deleteUser,
   updateBanStatus,
   getUsersBanned,
-  getTeachers
+  getTeachers,
+  updateUserType
 };

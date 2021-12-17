@@ -25,6 +25,10 @@ const CourseSchema = {
     require:true,
     type: Array,
   },
+ hidden:{
+    default:false,
+    type:Boolean
+  },
   isBanned: {
     //require: true,
     type: Boolean,

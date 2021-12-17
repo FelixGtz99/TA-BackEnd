@@ -6,6 +6,7 @@ const {
   deleteCourse,
   getCoursesById,
   getCoursesByCategory,
+  changeStatusCourse,
 } = require("../controllers/course");
 
 const {check} = require('express-validator')
@@ -25,12 +26,13 @@ check('category', 'El campo categoria es invalido').isMongoId(),
 check('price', 'El campo tarifa debe ser numero').isNumeric(),
 check('teacher', 'El campo instructor es invalido').isMongoId(),
 check('tags', 'Debe de existir por lo menos una etiqueta').not().isEmpty(),
-check('level', 'El campo nivel es invaliod').isMongoId(),
+check('level', 'El campo nivel es invalido').isMongoId(),
 //check('imgsRef', 'El campo de imagenes es invalido').not().isEmpty(),
 validateData
 ],postCourse);
 
 router.put("/:id", putCourse);
+router.put("/status/:id",checkToken, changeStatusCourse);
 
 router.get('/category/:id',checkToken, getCoursesByCategory)
 

@@ -10,7 +10,7 @@ const CertificationSchema=Schema({
         ref:'Category',
         require:true
     },
-    docref:{
+    docRef:{
         type:String,
         require:true
     },

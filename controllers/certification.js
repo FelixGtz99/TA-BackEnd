@@ -2,10 +2,18 @@ const Certification = require("../models/certification");
 
 const postCertification =  async (req, res) => {
   const certification= Certification(req.body)
-  await certification.save()
-   res.json({
-       certification
-   })
+  try {
+    await certification.save()
+    res.json({
+        ok:true,
+        certification
+    })
+  } catch (error) {
+      res.json({
+          ok:false,
+          msg:error
+      })
+  }
 };
 
 const getCertifications = async (req, res) => {
@@ -19,9 +27,10 @@ const getCertifications = async (req, res) => {
 const getMyCertifications = async (req, res) => {
     const user=req.params.id
     console.log(user)
-    const certifications= await Certification.find({user})
+    const certifications= await Certification.find({user}).populate("category","name")
 
     res.json({
+        ok:true,
         certifications
     })
 };

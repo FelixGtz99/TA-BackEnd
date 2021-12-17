@@ -50,7 +50,7 @@ const UserSchema =Schema({
     finishBan:{
         type:Date
     },
-shedule:{
+schedule:{
     
 }
 

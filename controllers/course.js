@@ -77,7 +77,29 @@ const putCourse = async (req, res = response) => {
     })
   }
  };
-
+//Change Staturs
+ const changeStatusCourse = async (req, res = response) => {
+  const id = req.params.id 
+  const {hidden}=req.body
+  try {
+    const existsCourse= await Course.findById(id)
+    if(!existsCourse){
+      return res.status(505).json({
+        msg:'no existe el curso'
+      })
+    }
+    const updatedCourse= await Course.findByIdAndUpdate(id,{hidden},{new:true})
+    res.json({
+      ok:true,
+      updatedCourse
+    })
+  } catch (error) {
+    res.status(404).json({
+      ok:false,
+      error
+    })
+  }
+ };
 
  //temporalemente hasta que se cambie la gestion de asesorias 
  //TODO: verificar que no se elimine si existe una asesoria
@@ -95,5 +117,6 @@ module.exports = {
   postCourse,
   putCourse,
   deleteCourse,
-  getCoursesByCategory
+  getCoursesByCategory,
+  changeStatusCourse
 };

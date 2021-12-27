@@ -52,9 +52,12 @@ const UserSchema =Schema({
     },
 schedule:{
     
+},
+
+evaluations: {},
+average:{
+
 }
-
-
 })
 
 

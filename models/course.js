@@ -1,6 +1,7 @@
 const { Schema, model } = require("mongoose");
 
-const CourseSchema = {
+const CourseSchema = new Schema(
+{
   category: {
     type: Schema.Types.ObjectId,
     ref: "Category",
@@ -15,6 +16,7 @@ const CourseSchema = {
     ref: "User",
     require: true,
   },
+  average:{},
   evaluations: {},
   level: {
     type: Schema.Types.ObjectId,
@@ -46,5 +48,12 @@ const CourseSchema = {
   gdrive: {
     type: String,
   },
-};
+
+},
+
+{
+  timestamps: true,
+}
+
+) 
 module.exports=model('Course', CourseSchema)

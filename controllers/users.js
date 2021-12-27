@@ -1,7 +1,9 @@
 const { response } = require("express");
 const User = require("../models/user");
+const Course = require("../models/course");
 const bcrypt = require("bcryptjs");
 const { generateJWT } = require("../helpers/jwt");
+const course = require("../models/course");
 const postUser = async (req, res = response) => {
   const { email, pass } = req.body;
   try {
@@ -31,32 +33,30 @@ const postUser = async (req, res = response) => {
 const getUser = async (req, res = response) => {
   const id = req.params.id;
   const user = User.findById(id);
-  if(user){
+  if (user) {
     res.json({
       user,
     });
-  }else{
+  } else {
     res.json({
-      ok:false,
-      msg:'No user'
-    })
+      ok: false,
+      msg: "No user",
+    });
   }
-  
 };
 const getUserByEmail = async (req, res = response) => {
-  const { email } =req.body
-  const user = User.find({email});
-  if(user){
+  const { email } = req.body;
+  const user = User.find({ email });
+  if (user) {
     res.json({
       user,
     });
-  }else{
+  } else {
     res.json({
-      ok:false,
-      msg:'No user'
-    })
+      ok: false,
+      msg: "No user",
+    });
   }
-  
 };
 
 const putUser = async (req, res = response) => {
@@ -83,22 +83,22 @@ const putUser = async (req, res = response) => {
         });
       }
     }
-   if(!userDB.google) {
-    campos.email = email;
-   }else if (userDB.email !==email){
-    return res.status(400).json({
-      ok:false,
-      msg:'usuarios de google no puede cambiar su correo'
-    })
-   }
-  
+    if (!userDB.google) {
+      campos.email = email;
+    } else if (userDB.email !== email) {
+      return res.status(400).json({
+        ok: false,
+        msg: "usuarios de google no puede cambiar su correo",
+      });
+    }
+
     const updatedUser = await User.findByIdAndUpdate(uid, campos, {
       new: true,
     });
 
     res.json({
       ok: true,
-      updatedUser
+      updatedUser,
     });
   } catch (error) {
     console.log(error);
@@ -107,28 +107,25 @@ const putUser = async (req, res = response) => {
       msg: "la cagaste carnal",
     });
   }
-
 };
 
-const updateUserType=async(req,res)=>{
-    const id = req.params.id
-   const data=req.body
-   try {
-    const updatedUser = await User.findByIdAndUpdate(id, data,{new:true})
+const updateUserType = async (req, res) => {
+  const id = req.params.id;
+  const data = req.body;
+  try {
+    const updatedUser = await User.findByIdAndUpdate(id, data, { new: true });
     res.json({
       ok: true,
-      updatedUser
+      updatedUser,
     });
-   } catch (error) {
-     console.log(error)
-     res.status(500).json({
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
       ok: false,
       msg: "la cagaste carnal",
     });
-   }
- 
-}
-
+  }
+};
 
 const deleteUser = async (req, res = response) => {};
 
@@ -161,11 +158,48 @@ const getUsersBanned = async (req, res = response) => {
   });
 };
 const getTeachers = async (req, res = response) => {
-  const teachers = await User.find({userType:'TEACHER'})
+  const teachers = await User.find({ userType: "TEACHER" });
+  teachers.forEach((teacher) => {});
+
   res.json({
-    teachers
-  })
+    teachers,
+  });
 };
+const getPopularTeachers = async (req, res = response) => {
+  const teachers = await User.find({ userType: "TEACHER" });
+  var teacherLoop = new Promise((resolve, reject) => {
+    teachers.forEach(async (teacher, index, array) => {
+      let evaluations = 0;
+      let punctuations = 0;
+      const courses = await Course.find({ teacher: teacher._id });
+      courses.forEach((course) => {
+        course.evaluations.forEach((e) => {
+
+
+          evaluations++;
+          console.log(evaluations)
+          punctuations += e.punctuation;
+        });
+      });
+      teacher.evaluations = evaluations;
+      teacher.average = punctuations / evaluations;
+      if (index === array.length - 1) resolve();
+    });
+  });
+
+  teacherLoop.then(() => {
+    teachers.map((t) => {
+      if (t.evaluations > 5) return t;
+    });
+    teachers.sort((a, b) => b.average - a.average);
+    teachers.slice(10);
+    res.json({
+      ok: true,
+      teachers,
+    });
+  });
+};
+
 module.exports = {
   postUser,
   getUser,
@@ -174,5 +208,6 @@ module.exports = {
   updateBanStatus,
   getUsersBanned,
   getTeachers,
-  updateUserType
+  updateUserType,
+  getPopularTeachers,
 };

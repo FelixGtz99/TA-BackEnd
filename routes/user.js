@@ -9,6 +9,7 @@ const {
   getTeachers,
   putUser,
   updateUserType,
+  getPopularTeachers,
 } = require("../controllers/users");
 const { checkToken } = require("../middlewares/check-token");
 const { validateData } = require("../middlewares/validate-data");
@@ -33,7 +34,7 @@ router.put(
   "/banstatus/:id",
   [
     checkToken,
-    check("finishBan", "Es necesarioa la fecha de finalización")
+    check("finishBan", "Es necesaria la fecha de finalización")
       .not()
       .isEmpty(),
     check("isBanned", "Es necesario designar status").isBoolean(),
@@ -45,4 +46,5 @@ router.put('/:id',checkToken, putUser)
 router.put('/type/:id', updateUserType)
 router.get("/banned", checkToken, getUsersBanned);
 router.get("/teachers", checkToken, getTeachers);
+router.get("/popular/teacher", getPopularTeachers);
 module.exports = router;

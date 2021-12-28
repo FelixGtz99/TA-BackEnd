@@ -32,9 +32,12 @@ const postUser = async (req, res = response) => {
 
 const getUser = async (req, res = response) => {
   const id = req.params.id;
-  const user = User.findById(id);
+  var user = await User.findById(id);
+
   if (user) {
+    user = await getEvaluationsAverage(user)
     res.json({
+      ok: true,
       user,
     });
   } else {
@@ -169,20 +172,7 @@ const getPopularTeachers = async (req, res = response) => {
   const teachers = await User.find({ userType: "TEACHER" });
   var teacherLoop = new Promise((resolve, reject) => {
     teachers.forEach(async (teacher, index, array) => {
-      let evaluations = 0;
-      let punctuations = 0;
-      const courses = await Course.find({ teacher: teacher._id });
-      courses.forEach((course) => {
-        course.evaluations.forEach((e) => {
-
-
-          evaluations++;
-          console.log(evaluations)
-          punctuations += e.punctuation;
-        });
-      });
-      teacher.evaluations = evaluations;
-      teacher.average = punctuations / evaluations;
+      teacher = await getEvaluationsAverage(teacher);
       if (index === array.length - 1) resolve();
     });
   });
@@ -199,7 +189,24 @@ const getPopularTeachers = async (req, res = response) => {
     });
   });
 };
+async function getEvaluationsAverage(teacher) {
+  let evaluations = 0;
+  let punctuations = 0;
+  const courses = await Course.find({ teacher: teacher._id });
+  console.log(courses)
+  courses.forEach((course) => {
+    if(course.evaluations!=undefined){
+      course.evaluations.forEach((e) => {
+        evaluations++;
+        punctuations += e.punctuation;
+      });
+    }
 
+  });
+  teacher.evaluations = evaluations;
+  teacher.average = punctuations / evaluations;
+  return teacher;
+}
 module.exports = {
   postUser,
   getUser,

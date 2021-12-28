@@ -30,7 +30,10 @@ const getCoursesById = async (req, res = response) => {
 
 
 const getRecentCourses = async(req, res=response)=>{
-const courses= await Course.find()
+const courses= await Course.find()   .populate("category", "name")
+.populate("level", "name")
+.populate("teacher", "name img");
+
 courses.sort((a, b) => b.createdAt - a.createdAt);
 courses.slice(10);
 res.json({
@@ -52,7 +55,12 @@ const getPopularCourses = async (req, res = response) => {
   });
 
   courses.map((course) => {
-    if (course.evaluations.length > 5) return course;
+    if(course.evaluations==undefined) {
+      return;
+    }else{
+      if (course.evaluations.length > 5) return course;
+
+    }
   });
   courses.sort((a, b) => b.average - a.average);
   courses.slice(10);
@@ -65,7 +73,12 @@ const getPopularCourses = async (req, res = response) => {
 
 
 function getAverage(obj) {
-  return obj.reduce((sum, value) => sum + value.punctuation, 0) / obj.length;
+  if(obj==undefined) {
+    return 0
+  }else{
+    return obj.reduce((sum, value) => sum + value.punctuation, 0) / obj.length;
+
+  }
 }
 const postCourse = async (req, res = response) => {
   const course = new Course(req.body);

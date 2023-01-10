@@ -19,14 +19,12 @@ const checkItem = async (req, res) => {
         res.send({ data: detailStripe })
 
     } catch (e) {
-        console.log(e.message)
         res.status(500);
         res.send({ error: 'Algo ocurrio' })
     }
 }
 const getItem = async (req, res) => {
     const { id } = req.params
-    console.log("Entro aki", id)
 
     const userData = await Order.findOne({ localizator: id })
     res.send({ data: userData })

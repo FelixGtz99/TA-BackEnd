@@ -28,74 +28,70 @@ const login = async (req, res = response) => {
   } catch (error) {}
 };
 const renewToken = async (req, res = response) => {
-    const uid = req.uid;
-    console.log('ddd');
-    console.log(uid);
-    // Generar el TOKEN - JWT
-    const token = await generateJWT(uid);
-    try {
-      const user=await User.findById(uid)
-      res.json({
-        ok: true,
-        token,
-        user
-      });
-    } catch (error) {
-      console.log(error);
-      res.status(404).json({
-        ok: true,
-       msg:'no existe usuario'
-      });
-    
-    }
-   
-  };
-
-const googleSignIn=async (req,res=response)=>{
-  const googleToken=req.body.token
-   var isValid=true
+  const uid = req.uid;
+  console.log("ddd");
+  console.log(uid);
+  // Generar el TOKEN - JWT
+  const token = await generateJWT(uid);
   try {
-    const {name,email,picture}=await googleVerify(googleToken)
-    const userDB=await User.findOne({email})
+    const user = await User.findById(uid);
+    res.json({
+      ok: true,
+      token,
+      user,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(404).json({
+      ok: true,
+      msg: "no existe usuario",
+    });
+  }
+};
+
+const googleSignIn = async (req, res = response) => {
+  const googleToken = req.body.token;
+  let isValid = true;
+  try {
+    const { name, email, picture } = await googleVerify(googleToken);
+    const userDB = await User.findOne({ email });
     let user;
-    if(!userDB){
-      isValid=false
-      user=new User({
-        name:name,
+    if (!userDB) {
+      isValid = false;
+      user = new User({
+        name: name,
         email,
-        pass:"@@@",
-        img:picture,
-        google:true,
-       // userType:'NOTYPE'
-      })
-    
+        pass: "@@@",
+        img: picture,
+        google: true,
+        // userType:'NOTYPE'
+      });
     } else {
       // existe usuario
       user = userDB;
       user.google = true;
     }
-    await user.save()
-    const token=await generateJWT(user.id)
+    await user.save();
+    const token = await generateJWT(user.id);
 
     res.json({
-      ok:true,
+      ok: true,
       isValid,
-      id:user.id,
-      token
-    })
-
+      id: user.id,
+      token,
+    });
   } catch (error) {
     console.log(error);
 
     res.status(401).json({
       ok: false,
-      msg: "Token no es correcto",
+      msg: "Token invalid",
     });
   }
-}
+};
 
-module.exports={
-    login,
-    renewToken,
-    googleSignIn
-}
+module.exports = {
+  login,
+  renewToken,
+  googleSignIn,
+};

@@ -9,17 +9,17 @@ const postCategory = async (req, res = response) => {
   try {
     const existsCategory = await Category.findOne({ name });
     if (existsCategory) {
-      return res.status(505).json({
-        msg: "Ya existe una categoria con ese nombre",
+      return res.status(400).json({
+        msg: "Ya existe una categoría con ese nombre",
       });
     }
 
     await category.save();
-    res.json({
+    res.status(201).json({
       category,
     });
   } catch (error) {
-    res.json({
+    res.status(500).json({
       error,
     });
   }
@@ -38,8 +38,8 @@ const deleteCategory = async (req, res = response) => {
   try {
     const categoryDB = await Category.findById(id);
     if (!categoryDB) {
-      return res.json({
-        msg: "No existe la categoria",
+      return res.status(404).json({
+        msg: "No existe la categoría",
       });
     }
     await Category.findByIdAndDelete(id);
@@ -48,7 +48,7 @@ const deleteCategory = async (req, res = response) => {
       msg: "Ha sido eliminado",
     });
   } catch (error) {
-    res.json({
+    res.status(500).json({
       error,
     });
   }
@@ -62,7 +62,7 @@ const putCategory = async (req, res = response) => {
     if (!categoryDB) {
       return res.status(404).json({
         ok: false,
-        msg: "No existe esa categoria",
+        msg: "No existe esa categoría",
       });
     }
     //Actualizar
@@ -72,24 +72,28 @@ const putCategory = async (req, res = response) => {
         name,
       });
       if (existsCategory) {
-        return res.status(404).json({
+        return res.status(400).json({
           ok: false,
-          msg: "Ya existe esa categoria",
+          msg: "Ya existe esa categoría",
         });
       }
     }
 
     const newCategory = await Category.findByIdAndUpdate(
       id,
-      {  name,  },
-      {  new: true, }
+      { name },
+      { new: true }
     );
 
     res.json({
       ok: true,
       newCategory,
     });
-  } catch (error) {}
+  } catch (error) {
+    res.status(500).json({
+      error,
+    });
+  }
 };
 
 module.exports = {

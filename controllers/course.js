@@ -15,10 +15,10 @@ const getCoursesByCategory = async (req, res = response) => {
   res.json({ courses });
 };
 //Retorna los cursos de un instructor
-const getCoursesById = async (req, res = response) => {
+const getCoursesByTeacherId = async (req, res = response) => {
   const id = req.params.id;
 
-  const courses = await Course.find({ teacher: id })
+  const courses = await Course.findByTeacher(id)
     .populate("category", "name")
     .populate("level", "name")
     .populate("teacher", "name img");
@@ -27,57 +27,66 @@ const getCoursesById = async (req, res = response) => {
     courses,
   });
 };
+const getCoursesById = async (req, res = response) => {
+  const id = req.params.id;
 
+  const course = await Course.findById(id)
+    .populate("category", "name")
+    .populate("level", "name")
+    .populate("teacher", "name img schedule");
 
-const getRecentCourses = async(req, res=response)=>{
-const courses= await Course.find()   .populate("category", "name")
-.populate("level", "name")
-.populate("teacher", "name img");
+  res.json({
+    ok: true,
+    course,
+  });
+};
 
-courses.sort((a, b) => b.createdAt - a.createdAt);
-courses.slice(10);
-res.json({
-  ok:true,
-  courses
-})
-}
+const getRecentCourses = async (req, res = response) => {
+  const courses = await Course.find()
+    .populate("category", "name")
+    .populate("level", "name")
+    .populate("teacher", "name img");
+
+  courses.sort((a, b) => b.createdAt - a.createdAt);
+  courses.slice(10);
+  res.json({
+    ok: true,
+    courses,
+  });
+};
 
 const getPopularCourses = async (req, res = response) => {
   const courses = await Course.find()
     .populate("category", "name")
     .populate("level", "name")
     .populate("teacher", "name img");
-   
-  
-  courses.forEach((course) => {
 
+  courses.forEach((course) => {
     course.average = getAverage(course.evaluations);
   });
 
-  courses.map((course) => {
-    if(course.evaluations==undefined) {
-      return;
-    }else{
-      if (course.evaluations.length > 5) return course;
-
-    }
-  });
+  // courses.map((course) => {
+  //   if (course.evaluations == undefined) {
+  //     return;
+  //   } else {
+  //     if (course.evaluations.length > 5) return course;
+  //   }
+  // });
+  courses.filter((course) => course.evaluations?.length > 5)
   courses.sort((a, b) => b.average - a.average);
   courses.slice(10);
 
   res.json({
-    ok:true,
+    ok: true,
     courses,
   });
 };
 
-
 function getAverage(obj) {
-  if(obj==undefined) {
-    return 0
-  }else{
+  if (obj == undefined) {
+    return 0;
+  } else {
     return obj.reduce((sum, value) => sum + value.punctuation, 0) / obj.length;
-
   }
 }
 const postCourse = async (req, res = response) => {
@@ -87,11 +96,10 @@ const postCourse = async (req, res = response) => {
   const { category, teacher, level } = req.body;
   try {
     const existsCourse = await Course.findOne({ category, teacher, level });
-    console.log("se esta creato");
     if (existsCourse) {
-      return res.json({
+      return res.status(400).json({
         ok: false,
-        msg: "El instructor ya cuenta con un curso en esa catagoria",
+        msg: "El instructor ya cuenta con un curso en esa categoría",
       });
     }
 
@@ -102,7 +110,7 @@ const postCourse = async (req, res = response) => {
       course,
     });
   } catch (error) {
-    res.json({
+    res.status(500).json({
       ok: false,
 
       msg: error,
@@ -116,7 +124,7 @@ const putCourse = async (req, res = response) => {
   try {
     const existsCourse = await Course.findById(id);
     if (!existsCourse) {
-      return res.status(505).json({
+      return res.status(404).json({
         msg: "no existe el curso",
       });
     }
@@ -139,7 +147,7 @@ const changeStatusCourse = async (req, res = response) => {
   try {
     const existsCourse = await Course.findById(id);
     if (!existsCourse) {
-      return res.status(505).json({
+      return res.status(404).json({
         msg: "no existe el curso",
       });
     }
@@ -167,11 +175,13 @@ const deleteCourse = async (req, res = response) => {
   const id = req.params.id;
 
   await Course.findByIdAndDelete(id);
+  
 };
 
 module.exports = {
   getCourses,
   getCoursesById,
+  getCoursesByTeacherId,
   postCourse,
   putCourse,
   deleteCourse,

@@ -13,5 +13,5 @@ router.post("/",[
     
 ], postAdvisory)
 router.get("/",checkToken,getAdvisoryById)
-router.get("/student",getAdvisoryByStudent)
+router.get("/student/:id",getAdvisoryByStudent)
 module.exports = router;

@@ -1,5 +1,4 @@
 const { response } = require("express");
-const { populate } = require("../models/advisory");
 
 const Advisory = require("../models/advisory");
 
@@ -7,7 +6,7 @@ const postAdvisory = async (req, res = response) => {
   const advisory = Advisory(req.body);
   await advisory.save();
 
-  res.json({
+  res.status(201).json({
     advisory,
   });
 };
@@ -22,18 +21,19 @@ const getAdvisoryById = async (req, res = response) => {
 
 const getAdvisoryByStudent = async (req, res = response) => {
   //TODO: hacer que funcione esto
-  const {student}=req.body
-  const advisories = await Advisory.findOne({ student}).populate("student","name").populate({
-    path: "course",
-    model: "Course",
-    select: "days category level imgsRef",
-    populate: { path: "teacher", model: "User", select: "name img" },
-    populate: { path: "category", model: "Category", select: "name " },
-    populate: { path: "level", model: "Level", select: "name " },
-
-  })
-
+  const id = req.params.id;
+  const advisories = await Advisory.findByStudent({ student: id })
+    .populate("student", "name")
+    .populate({
+      path: "course",
+      model: "Course",
+      select: "teacher days category level imgsRef",
+      populate: { path: "teacher", model: "User", select: "name" },
+      populate: { path: "category", model: "Category", select: "name" },
+      populate: { path: "level", model: "Level", select: "name " },
+    });
   res.json({
+    ok: true,
     advisories,
   });
 };

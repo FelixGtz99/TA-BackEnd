@@ -20,7 +20,17 @@ const ReportSchema = Schema({
         type:String,
         require:true
     }
-})
+},
+{
+    statics: {
+      findByTeacher(teacher) {
+        return this.find({ teacher });
+      },
+      findByStudent(student) {
+        return this.find({ student });
+      },
+    },
+  })
 
 
 module.exports=model('Report', ReportSchema)

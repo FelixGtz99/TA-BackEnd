@@ -9,7 +9,7 @@ const postUser = async (req, res = response) => {
   try {
     const existEmail = await User.findOne({ email });
     if (existEmail) {
-      return res.status(404).json({
+      return res.status(400).json({
         msg: "El correo ya esta registrado",
       });
     }
@@ -18,7 +18,7 @@ const postUser = async (req, res = response) => {
     user.pass = bcrypt.hashSync(pass, salt);
     const token = await generateJWT(user.id);
     await user.save();
-    res.json({
+    res.status(201).json({
       user,
       token,
     });
@@ -35,13 +35,13 @@ const getUser = async (req, res = response) => {
   var user = await User.findById(id);
 
   if (user) {
-    user = await getEvaluationsAverage(user)
+    user = await getEvaluationsAverage(user);
     res.json({
       ok: true,
       user,
     });
   } else {
-    res.json({
+    res.status(404).json({
       ok: false,
       msg: "No user",
     });
@@ -55,7 +55,7 @@ const getUserByEmail = async (req, res = response) => {
       user,
     });
   } else {
-    res.json({
+    res.status(404).json({
       ok: false,
       msg: "No user",
     });
@@ -104,10 +104,9 @@ const putUser = async (req, res = response) => {
       updatedUser,
     });
   } catch (error) {
-    console.log(error);
     res.status(500).json({
       ok: false,
-      msg: "la cagaste carnal",
+      msg: error,
     });
   }
 };
@@ -122,10 +121,9 @@ const updateUserType = async (req, res) => {
       updatedUser,
     });
   } catch (error) {
-    console.log(error);
     res.status(500).json({
       ok: false,
-      msg: "la cagaste carnal",
+      msg: error,
     });
   }
 };
@@ -138,7 +136,7 @@ const updateBanStatus = async (req, res = response) => {
   try {
     const existsUser = await User.findById(id);
     if (!existsUser) {
-      return res.status(505).json({
+      return res.status(404).json({
         msg: "no existe el usuario",
       });
     }
@@ -161,15 +159,15 @@ const getUsersBanned = async (req, res = response) => {
   });
 };
 const getTeachers = async (req, res = response) => {
-  const teachers = await User.find({ userType: "TEACHER" });
-  teachers.forEach((teacher) => {});
+  const teachers = await User.findByUserType("TEACHER");
+  // teachers.forEach((teacher) => {});
 
   res.json({
     teachers,
   });
 };
 const getPopularTeachers = async (req, res = response) => {
-  const teachers = await User.find({ userType: "TEACHER" });
+  const teachers = await User.findByUserType("TEACHER");
   var teacherLoop = new Promise((resolve, reject) => {
     teachers.forEach(async (teacher, index, array) => {
       teacher = await getEvaluationsAverage(teacher);
@@ -193,15 +191,14 @@ async function getEvaluationsAverage(teacher) {
   let evaluations = 0;
   let punctuations = 0;
   const courses = await Course.find({ teacher: teacher._id });
-  console.log(courses)
+  console.log(courses);
   courses.forEach((course) => {
-    if(course.evaluations!=undefined){
+    if (course.evaluations != undefined) {
       course.evaluations.forEach((e) => {
         evaluations++;
         punctuations += e.punctuation;
       });
     }
-
   });
   teacher.evaluations = evaluations;
   teacher.average = punctuations / evaluations;

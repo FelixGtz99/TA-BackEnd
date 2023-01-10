@@ -9,6 +9,7 @@ const {
   changeStatusCourse,
   getPopularCourses,
   getRecentCourses,
+  getCoursesByTeacherId,
 } = require("../controllers/course");
 
 const {check} = require('express-validator')
@@ -18,7 +19,9 @@ const router = Router();
 
 router.get("/",checkToken, getCourses);
 
-router.get("/teacher/:id", checkToken, getCoursesById)
+router.get("/id/:id", checkToken,getCoursesById)
+
+router.get("/teacher/:id", checkToken,getCoursesByTeacherId)
 
 router.get("/popular", getPopularCourses)
 

@@ -5,16 +5,17 @@ const CourseSchema = new Schema(
   category: {
     type: Schema.Types.ObjectId,
     ref: "Category",
-    require: true,
+    require: [true,'Category is required'],
   },
   price: {
     type: Number,
     require: true,
+    min:[0,'Minimum price is 0'],
   },
   teacher: {
     type: Schema.Types.ObjectId,
     ref: "User",
-    require: true,
+    require: [true, 'Teacher is required'],
   },
   average:{},
   evaluations: {},
@@ -49,9 +50,22 @@ const CourseSchema = new Schema(
     type: String,
   },
 
+},{
+
 },
 
 {
+  statics: {
+    findByUser(user) {
+      return this.find({ user,hidden:false });
+    },
+    findByTeacher(teacher) {
+      return this.find({ teacher,hidden:false});
+    },
+    findByCategory(Category) {
+      return this.find({ category,hidden:false });
+    },
+  },
   timestamps: true,
 }
 
